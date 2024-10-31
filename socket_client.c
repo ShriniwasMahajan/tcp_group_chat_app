@@ -11,7 +11,7 @@ void listenAndPrint(int socketFD)
         if (amountReceived > 0)
         {
             buffer[amountReceived] = 0;
-            printf("%s", buffer);
+            printf("%s\n", buffer);
         }
         else if (!amountReceived)
             break;
@@ -32,8 +32,7 @@ void readConsoleEntriesAndSendToServer(int socketFD)
     size_t nameSize = 0;
     printf("Please enter your name: ");
     ssize_t nameCount = getline(&name, &nameSize, stdin);
-    if (nameCount > 0)
-        name[nameCount - 1] = 0;
+    name[nameCount - 1] = 0;
 
     char *line = NULL;
     size_t lineSize = 0;
@@ -44,17 +43,18 @@ void readConsoleEntriesAndSendToServer(int socketFD)
     while (true)
     {
         ssize_t charCount = getline(&line, &lineSize, stdin);
+
+        if (charCount <= 0)
+            break;
+
         line[charCount - 1] = 0;
 
         snprintf(buffer, sizeof buffer, "%s: %s", name, line);
 
-        if (charCount > 0)
-        {
-            if (!strncmp(line, "exit", charCount))
-                break;
+        if (!strncmp(line, "exit", charCount))
+            break;
 
-            ssize_t amountSent = send(socketFD, buffer, strlen(buffer), 0);
-        }
+        ssize_t amountSent = send(socketFD, buffer, strlen(buffer), 0);
     }
 
     free(line);
