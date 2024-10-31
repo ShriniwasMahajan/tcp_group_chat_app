@@ -1,4 +1,4 @@
-# Command-Line Chat Application
+# TCP Group Chat Application
 
 A multi-threaded TCP socket-based chat server and client implementation using POSIX threads and socket APIs in C, supporting concurrent users with real-time message broadcasting through a centralized server in a command-line interface.
 
